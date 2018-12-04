@@ -185,7 +185,7 @@ function DrawText3Ds(x, y, z, text, scale)
 end
 
 function loadModel(model)
-	while (not HasModelLoaded(model) do
+	while (not HasModelLoaded(model)) do
 		RequestModel(model)
 		
 		Citizen.Wait(1)
