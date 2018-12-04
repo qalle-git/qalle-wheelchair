@@ -12,7 +12,7 @@
 
 [REQUIREMENTS]
   
-* ESX Support
+* None, standalone
 
 [INSTALLATION]
 
