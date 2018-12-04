@@ -133,7 +133,7 @@ Citizen.CreateThread(function()
 				if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), x,y,z) < 1.0 and not sits and not hasPickedUp then
 					if object ~= nil then
 						DrawText3Ds(x, y, z + 0.5, 'Press [~g~E~s~] to sit', 0.4)
-						if IsControlJustPressed(0, Keys['E']) then
+						if IsControlJustPressed(0, 38) then
 							AttachEntityToEntity(PlayerPedId(), object, 4103, 0, 0.0, 0.4, 0.0, 0.0, 180.0, 0.0, false, false, false, false, 2, true)
 							Wait(100)
 							loadAnimDict('missfinale_c2leadinoutfin_c_int')
@@ -146,7 +146,7 @@ Citizen.CreateThread(function()
 				if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), x1,y1,z1) < 0.7 and not hasPickedUp and not sits then
 					if object ~= nil then
 						DrawText3Ds(x1, y1, z1 + 0.5, 'Press [~g~E~s~] to pick up', 0.4)
-						if IsControlJustPressed(0, Keys['E']) then
+						if IsControlJustPressed(0, 38) then
 							TaskPlayAnim(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 8.0, 8.0, -1, 50, 0, false, false, false)
 							Wait(100)
 							AttachEntityToEntity(object , PlayerPedId(), GetPedBoneIndex(PlayerPedId(),  28422), -0.00, -0.3, -0.73, 195.0, 180.0, 180.0, 0.0, false, false, true, false, 2, true)
