@@ -37,7 +37,7 @@ local wheelchairGone = false
 
 local LastWheelchair = nil
 
-RegisterCommand('rullstol', function()
+RegisterCommand('wheelchair', function()
 	if PlayerData.job.name == 'ambulance' then
 		ESX.LoadModel('prop_wheelchair_01')
 
@@ -49,7 +49,7 @@ RegisterCommand('rullstol', function()
 	
 end, false)
 
-RegisterCommand('tabortrullstol', function()
+RegisterCommand('removewheelchair', function()
 
 	if PlayerData.job.name == 'ambulance' then
 		local pedCoords = GetEntityCoords(PlayerPedId())
