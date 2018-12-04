@@ -1,66 +1,26 @@
-local Keys = {
-["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
-["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
-["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
-["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
-["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
-["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
-["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
-}
-
-
---- esx
-ESX                           = nil
-local PlayerData              = {}
-
-Citizen.CreateThread(function ()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-		PlayerData = ESX.GetPlayerData()
-	end
-end)
-
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-	PlayerData = xPlayer
-end)
-
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
-	PlayerData.job = job
-end)
-
 local WheelChair = false
 local wheelchairGone = false
 
 local LastWheelchair = nil
 
 RegisterCommand('wheelchair', function()
-	if PlayerData.job.name == 'ambulance' then
-		ESX.LoadModel('prop_wheelchair_01')
+	loadModel('prop_wheelchair_01')
 
-		Citizen.Wait(500)
-		local pedCoords = GetEntityCoords(PlayerPedId())
+	Citizen.Wait(500)
+	local pedCoords = GetEntityCoords(PlayerPedId())
 
-		local wheelchair = CreateObject(GetHashKey('prop_wheelchair_01'), pedCoords.x, pedCoords.y, pedCoords.z, true)
-	end
+	local wheelchair = CreateObject(GetHashKey('prop_wheelchair_01'), pedCoords.x, pedCoords.y, pedCoords.z, true)
 	
 end, false)
 
 RegisterCommand('removewheelchair', function()
 
-	if PlayerData.job.name == 'ambulance' then
-		local pedCoords = GetEntityCoords(PlayerPedId())
+	local pedCoords = GetEntityCoords(PlayerPedId())
 
-		local wheelchair = GetClosestObjectOfType(pedCoords.x, pedCoords.y, pedCoords.z, 10.0, GetHashKey('prop_wheelchair_01'))
+	local wheelchair = GetClosestObjectOfType(pedCoords.x, pedCoords.y, pedCoords.z, 10.0, GetHashKey('prop_wheelchair_01'))
 
-		if wheelchair ~= 0 and wheelchair ~= nil then
-			DeleteEntity(wheelchair)
-		else
-			ESX.ShowNotification('Ingen rullstol är nära!')
-		end
+	if wheelchair ~= 0 and wheelchair ~= nil then
+		DeleteEntity(wheelchair)
 	end
 	
 end, false)
@@ -99,7 +59,7 @@ Citizen.CreateThread(function()
 
 			if Distance < 5.0 then
 
-				if IsControlJustPressed(0, Keys['E']) and hasPickedUp then
+				if IsControlJustPressed(0, 38) and hasPickedUp then
 					DetachEntity(object)
 					ForceEntityAiAndAnimationUpdate(object)
 					Citizen.Wait(100)
@@ -115,7 +75,7 @@ Citizen.CreateThread(function()
 					hasPickedUp = false
 				end
 
-				if IsControlJustPressed(0, Keys['X']) and sits then
+				if IsControlJustPressed(0, 73) and sits then
 					DetachEntity(PlayerPedId())
 					local coords = GetEntityCoords(PlayerPedId())
 					local forward = GetEntityForwardVector(PlayerPedId())
@@ -128,7 +88,7 @@ Citizen.CreateThread(function()
 
 				if sits then
 
-					if IsControlPressed(0, Keys['W']) then
+					if IsControlPressed(0, 32) then
 						local x, y, z   = table.unpack(coords + forward * -0.01)
 						local Wheelchairheading = GetEntityHeading(object)
 						SetEntityCoords(object, x,y,z)
@@ -136,7 +96,7 @@ Citizen.CreateThread(function()
 						going = true
 					end
 
-					if IsControlJustReleased(0, Keys['W']) then
+					if IsControlJustReleased(0, 32) then
 						going = false
 					end
 
@@ -172,13 +132,12 @@ Citizen.CreateThread(function()
 
 				if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), x,y,z) < 1.0 and not sits and not hasPickedUp then
 					if object ~= nil then
-						ESX.Game.Utils.DrawText3D({x = x, y = y, z = z + 0.5}, 'Tryck [~g~E~s~] för att sätta dig', 0.4)
+						DrawText3Ds(x, y, z + 0.5}, 'Press [~g~E~s~] to sit', 0.4)
 						if IsControlJustPressed(0, Keys['E']) then
 							AttachEntityToEntity(PlayerPedId(), object, 4103, 0, 0.0, 0.4, 0.0, 0.0, 180.0, 0.0, false, false, false, false, 2, true)
 							Wait(100)
 							loadAnimDict('missfinale_c2leadinoutfin_c_int')
 							TaskPlayAnim(PlayerPedId(), 'missfinale_c2leadinoutfin_c_int', '_leadin_loop2_lester', 8.0, 8.0, -1, 0, 1, false, false, false)
-							--TaskStartScenarioInPlace(PlayerPedId(), 'PROP_HUMAN_SEAT_BENCH', 0, 0)
 							sits = true
 						end
 					end
@@ -186,7 +145,7 @@ Citizen.CreateThread(function()
 
 				if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), x1,y1,z1) < 0.7 and not hasPickedUp and not sits then
 					if object ~= nil then
-						ESX.Game.Utils.DrawText3D({x = x1, y = y1, z = z1 + 0.5}, 'Tryck [~g~E~s~] för att ta tag', 0.4)
+						DrawText3Ds(x1, y1, z1 + 0.5}, 'Press [~g~E~s~] to pick up', 0.4)
 						if IsControlJustPressed(0, Keys['E']) then
 							TaskPlayAnim(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 8.0, 8.0, -1, 50, 0, false, false, false)
 							Wait(100)
@@ -206,7 +165,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-function DrawText3D(x, y, z, text, scale)
+function DrawText3Ds(x, y, z, text, scale)
 	local onScreen, _x, _y = World3dToScreen2d(x, y, z)
 	local pX, pY, pZ = table.unpack(GetGameplayCamCoords())
 
@@ -225,16 +184,18 @@ function DrawText3D(x, y, z, text, scale)
 	DrawRect(_x, _y + 0.0150, 0.030 + factor, 0.025, 41, 11, 41, 100)
 end
 
+function loadModel(model)
+	while (not HasModelLoaded(model) do
+		RequestModel(model)
+		
+		Citizen.Wait(1)
+	end
+end
+
 function loadAnimDict(dict)
 	while (not HasAnimDictLoaded(dict)) do
 		RequestAnimDict(dict)
 		
 		Citizen.Wait(1)
 	end
-end
-
-function hintToDisplay(text)
-	SetTextComponentFormat("STRING")
-	AddTextComponentString(text)
-	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
