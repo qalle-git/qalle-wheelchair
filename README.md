@@ -8,8 +8,6 @@
 
 * You spawn it with /wheelchair.
 
-* This is not *RECOMMENDED* to use on full servers, this script is still buggy because of gta physics: the closest player "owns" the wheelchair which bugs it for other players. It works with smaller playerbase.
-
 [REQUIREMENTS]
   
 * None, standalone
