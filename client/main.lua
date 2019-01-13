@@ -147,6 +147,7 @@ Citizen.CreateThread(function()
 					if object ~= nil then
 						DrawText3Ds(x1, y1, z1 + 0.5, 'Press [~g~E~s~] to pick up', 0.4)
 						if IsControlJustPressed(0, 38) then
+							NetworkRequestControlOfEntity(object)
 							TaskPlayAnim(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 8.0, 8.0, -1, 50, 0, false, false, false)
 							Wait(100)
 							AttachEntityToEntity(object , PlayerPedId(), GetPedBoneIndex(PlayerPedId(),  28422), -0.00, -0.3, -0.73, 195.0, 180.0, 180.0, 0.0, false, false, true, false, 2, true)
