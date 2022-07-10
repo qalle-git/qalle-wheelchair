@@ -146,7 +146,7 @@ PickUp = function(wheelchairObject)
 		end
 	end
 
-	StopAnimTask(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 1)
+	StopAnimTask(PlayerPedId(), 'anim@heists@box_carry@', 'idle', 1.0)
 end
 
 DrawText3Ds = function(coords, text, scale)
