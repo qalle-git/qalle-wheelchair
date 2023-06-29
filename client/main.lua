@@ -14,37 +14,41 @@ end, false)
 
 Citizen.CreateThread(function()
 	while true do
-		local sleep = 500
+		local sleep = 1000
 
 		local ped = PlayerPedId()
-		local pedCoords = GetEntityCoords(ped)
 
-		local closestObject = GetClosestObjectOfType(pedCoords, 3.0, GetHashKey("prop_wheelchair_01"), false)
+		if not IsEntityDead(ped) and IsPedOnFoot(ped) then
+			local pedCoords = GetEntityCoords(ped)
+			local closestObject = GetClosestObjectOfType(pedCoords, 3.0, GetHashKey("prop_wheelchair_01"), false)
+			sleep = 500
 
-		if DoesEntityExist(closestObject) then
-			sleep = 5
-
-			local wheelChairCoords = GetEntityCoords(closestObject)
-			local wheelChairForward = GetEntityForwardVector(closestObject)
-			
-			local sitCoords = (wheelChairCoords + wheelChairForward * - 0.5)
-			local pickupCoords = (wheelChairCoords + wheelChairForward * 0.3)
-
-			if GetDistanceBetweenCoords(pedCoords, sitCoords, true) <= 1.0 then
-				DrawText3Ds(sitCoords, "[E] Sit", 0.4)
-
-				if IsControlJustPressed(0, 38) then
-					Sit(closestObject)
+			if DoesEntityExist(closestObject) then
+				sleep = 5
+	
+				local wheelChairCoords = GetEntityCoords(closestObject)
+				local wheelChairForward = GetEntityForwardVector(closestObject)
+				
+				local sitCoords = (wheelChairCoords + wheelChairForward * - 0.5)
+				local pickupCoords = (wheelChairCoords + wheelChairForward * 0.3)
+				
+				if #(pedCoords - sitCoords) <= 1.0 then
+					DrawText3Ds(sitCoords, "[E] Sit", 0.4)
+	
+					if IsControlJustPressed(0, 38) then
+						Sit(closestObject)
+					end
+				end
+	
+				if #(pedCoords - pickupCoords) <= 1.0 then
+					DrawText3Ds(pickupCoords, "[E] Pick up", 0.4)
+	
+					if IsControlJustPressed(0, 38) then
+						PickUp(closestObject)
+					end
 				end
 			end
 
-			if GetDistanceBetweenCoords(pedCoords, pickupCoords, true) <= 1.0 then
-				DrawText3Ds(pickupCoords, "[E] Pick up", 0.4)
-
-				if IsControlJustPressed(0, 38) then
-					PickUp(closestObject)
-				end
-			end
 		end
 
 		Citizen.Wait(sleep)
